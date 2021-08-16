@@ -1,20 +1,32 @@
 import React, { useState, useContext, useEffect } from "react";
-import { RIContext } from "../../reducers/RIState";
-import axios from 'axios';
+import { RIContext } from "./RIState";
 import {Link} from "react-router-dom"
 import logo from "./images/ri.jpg"
 import "./RIlogin.css"
+import axios from "axios";
+// const URL = "http://riom.theretailinsights.co/api/auth/signin"
 
 function RILogin() {
     const [login, setLogin] = useState({ username: "", password: "" });
-    const {
-        candidateOnBoardLogin,
-        candidateLoginValue,
-        candidateLoginResponse,
-      } = useContext(RIContext);
-    // const LoginRI = () => {
-    //     axios.
-    // }
+  
+   
+
+    const RIOnBoardLogin = () => {
+        const formDatas = { username: login.username, password: login.password };
+        axios
+          .post('http://riom.theretailinsights.co/api/auth/signin', login)
+          .then((response) => {
+            console.log(response, "login candidate");
+          })
+            .catch((error) => {
+                console.log(error);
+              });
+    }
+
+
+    useEffect(() => {
+        RIOnBoardLogin();
+      },[login]);
 
     const handleLogin = (e) => {
         e.preventDefault();

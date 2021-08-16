@@ -37,7 +37,9 @@ form {
   }
 
   input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="email"]
+{
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -46,15 +48,14 @@ input[type="password"] {
   border-bottom: 2px solid red;
 }
 
-input[type="password"]{
-  margin-bottom: 30px;
+
+.clearfix {
+  margin-top: 20px;
 }
-
-
 
 .signupbtn {
   display: block;
-  width: 90%;
+  width: 60%;
   margin: 0 auto;
   text-align: center;
   padding: 12px;
