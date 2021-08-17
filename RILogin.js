@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useFormik } from "formik";
 import { RIContext } from "./RIState";
 import {Link} from "react-router-dom"
 import logo from "./images/ri.jpg"
@@ -6,15 +7,42 @@ import "./RIlogin.css"
 import axios from "axios";
 // const URL = "http://riom.theretailinsights.co/api/auth/signin"
 
-function RILogin() {
-    const [login, setLogin] = useState({ username: "", password: "" });
-  
-   
 
-    const RIOnBoardLogin = () => {
-        const formDatas = { username: login.username, password: login.password };
+
+      const validate = values => {
+        const errors = {};
+      
+        if (!values.username) {
+          errors.username = 'Required !!';
+        } else if (values.username.length > 15) {
+          errors.username = 'Must be 15 characters or less';
+        }
+      
+      
+        if (!values.password) {
+          errors.password = 'Required !!';
+        }  
+    
+        return errors;
+      };
+      
+      const RILogin = () => {
+        const formik = useFormik({
+          initialValues: {
+            username: '',  
+            password: '',
+           
+      
+          },
+          validate,
+          onSubmit: values => {
+            alert(values);
+          },
+        });
+
+        const RIOnBoardLogin = () => {
         axios
-          .post('http://riom.theretailinsights.co/api/auth/signin', login)
+          .post('http://riom.theretailinsights.co/api/auth/signin', formik.values)
           .then((response) => {
             console.log(response, "login candidate");
           })
@@ -26,61 +54,70 @@ function RILogin() {
 
     useEffect(() => {
         RIOnBoardLogin();
-      },[login]);
+      },[formik.values]);
 
+      
     const handleLogin = (e) => {
-        e.preventDefault();
-        console.log("inside login");
-        // candidateOnBoardLogin({ ...loginData, history: props.history });
-        // CandidateProfile();
-        // loginRedirect();
-      };
-    
+      e.preventDefault();
+      alert(formik.values.username);
 
-    return (
-        <div className= "main">
+    };
+
+        return (
+          <div className= "main">
           <Link to = "/rilogin"> 
- 
-            <form>
-                
-                <img className="logo" src= {logo} alt= "name"></img>
 
-                    <div className="container">
-                        <label>
-                            <b>Email</b>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Enter Email"
-                            name="email"
-                            onChange={(e) =>
-                            setLogin({ ...login, username: e.target.value })
-                            }
-                            required
-                        />
-                        <label>
-                            <b>Password</b>
-                        </label>
-                        <input
-                            type="password"
-                            placeholder="Enter Password"
-                            name="psw"
-                            onChange={(e) =>
-                            setLogin({ ...login, password: e.target.value })
-                            }
-                            required
-                        />
-                       
-                        <div className="clearfix">
-                            <button type="submit" className="signupbtn"  onClick={handleLogin}>
-                            Sign In
-                            </button>
-                         </div>
-                    </div>
-            </form>
-          </Link>  
-    </div>
-    )
-}
-
-export default RILogin
+          <form onSubmit={formik.handleSubmit}>
+          <img className="logo" src= {logo} alt= "name"></img>
+      
+          <div className="container">
+      
+            <label htmlFor="username">First Name</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
+            />
+            {formik.touched.username && formik.errors.username ? (
+              <div className= 'validate'>{formik.errors.username}</div>
+            ) : null}
+      
+            <br />
+      
+      
+            
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+            />
+            {formik.touched.password && formik.errors.password ? (
+              <div className= 'validate'>{formik.errors.password}</div>
+            ) : null}
+      
+      <br />
+      
+     
+                      <div className="clearfix">
+                                  <button type="submit" className="signupbtn" onClick={handleLogin} >
+                                  Sign In
+                                  </button>
+                      </div>
+            </div>
+          </form>
+          </Link>
+      
+          </div>
+        );
+      };
+      
+      
+      
+      export default RILogin
